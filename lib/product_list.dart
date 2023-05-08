@@ -1,4 +1,5 @@
 import 'package:chapter_13/cart_model.dart';
+import 'package:chapter_13/cart_screen.dart';
 import 'package:chapter_13/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
@@ -52,25 +53,30 @@ class _ProductListScreenState extends State<ProductListScreen> {
         title: const Text('Product List'),
         centerTitle: true,
         actions: [
-          Center(
-            child: badges.Badge(
-              badgeContent:  Consumer<CartProvider>(
-                builder: (context, value, child){
-                  return Text(
-                    value.getCounter().toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  );
-                },
-
-              ),
-              badgeAnimation: const badges.BadgeAnimation.slide(
-                  animationDuration: Duration(milliseconds: 300)),
-              position: badges.BadgePosition.topEnd(top: 0, end: 0),
-              child: IconButton(
-                icon: const Icon(Icons.shopping_bag_outlined),
-                onPressed: () {},
+          InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CartScreen()));
+            },
+            child: Center(
+              child: badges.Badge(
+                badgeContent: Consumer<CartProvider>(
+                  builder: (context, value, child) {
+                    return Text(
+                      value.getCounter().toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                ),
+                badgeAnimation: const badges.BadgeAnimation.slide(
+                    animationDuration: Duration(milliseconds: 300)),
+                position: badges.BadgePosition.topEnd(top: 0, end: 0),
+                child: IconButton(
+                  icon: const Icon(Icons.shopping_bag_outlined),
+                  onPressed: () {},
+                ),
               ),
             ),
           ),
@@ -149,7 +155,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                     .toString()))
                                             .then((value) {
                                           print("Product is added to cart");
-                                          cart.addTotalPrice(double.parse(productPrice[index].toString()));
+                                          cart.addTotalPrice(double.parse(
+                                              productPrice[index].toString()));
                                           cart.addCounter();
                                         }).onError((error, stackTrace) {
                                           print(error.toString());
@@ -185,6 +192,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
               },
             ),
           ),
+
         ],
       ),
     );
