@@ -55,7 +55,7 @@ class _CartScreenState extends State<CartScreen> {
                 if (snapshot.hasData) {
                   return Expanded(
                       child: ListView.builder(
-                    itemCount: snapshot.data?.length,
+                    itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Card(
                         child: Padding(
@@ -69,9 +69,8 @@ class _CartScreenState extends State<CartScreen> {
                                   Image(
                                       height: 100,
                                       width: 100,
-                                      image: NetworkImage(snapshot
-                                          .data![index].image
-                                          .toString())),
+                                      image: NetworkImage(snapshot.data![index].image.toString()),
+                                  ),
                                   const SizedBox(
                                     width: 10,
                                   ),
@@ -82,13 +81,16 @@ class _CartScreenState extends State<CartScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          snapshot.data![index].productName
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              snapshot.data![index].productName.toString(),
+                                              style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500),
+                                            ),
+                                            Icon(Icons.delete)
+                                          ],
                                         ),
+                                       
                                         const SizedBox(
                                           width: 10,
                                         ),
@@ -140,12 +142,49 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   ));
                 }
-              })
+              }),
+          Consumer<CartProvider>(builder: (context, value, child) {
+            return Column(
+              children: [
+                ReusableWidget(
+                  title: 'Sub Total',
+                  value: r'$' + value.getTotalPrice().toStringAsFixed(2),
+                ),
+              ],
+            );
+          }),
         ],
       ),
     );
   }
 }
+
+class ReusableWidget extends StatelessWidget {
+  final String title, value;
+
+  const ReusableWidget({required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          Text(
+            value.toString(),
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 
 // import 'package:badges/badges.dart' as badges;
