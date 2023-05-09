@@ -6,6 +6,7 @@ import 'cart_model.dart';
 
 class CartProvider with ChangeNotifier {
   DBHelper db = DBHelper();
+
   int _counter = 0;
 
   int get counter => _counter;
@@ -15,9 +16,11 @@ class CartProvider with ChangeNotifier {
   double get totalPrice => _totalPrice;
 
   late Future<List<Cart>> _cart;
+
   Future<List<Cart>> get cart => _cart;
-  Future<List<Cart>> getData() async{
-    _cart = db.getCardList();
+
+  Future<List<Cart>> getData() async {
+    _cart = db.getCartList();
     return _cart;
   }
 
@@ -31,7 +34,7 @@ class CartProvider with ChangeNotifier {
   void _getPrefItems() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _counter = prefs.getInt('cart_item') ?? 0;
-    _totalPrice = prefs.getDouble('total_price') ?? 0;
+    _totalPrice = prefs.getDouble('total_price') ?? 0.0;
     notifyListeners();
   }
 
@@ -58,7 +61,7 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeCounter() {
+  void removerCounter() {
     _counter--;
     _setPrefItems();
     notifyListeners();
